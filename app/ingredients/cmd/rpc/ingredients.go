@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/config"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/server"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/svc"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/pb"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/config"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/server"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/svc"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"

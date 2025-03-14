@@ -1,31 +1,31 @@
-package ingredient
+package logic
 
 import (
 	"context"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/svc"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/types"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/svc"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type IngredientDetailLogic struct {
-	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
+	logx.Logger
 }
 
-// ingredient detail
 func NewIngredientDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IngredientDetailLogic {
 	return &IngredientDetailLogic{
-		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
+		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *IngredientDetailLogic) IngredientDetail(req *types.IngredientDetailReq) (resp *types.IngredientDetailResq, err error) {
+// 食材详情
+func (l *IngredientDetailLogic) IngredientDetail(in *__.IngredientDetailReq) (*__.IngredientDetailResp, error) {
 	// todo: add your logic here and delete this line
 
-	return
+	return &__.IngredientDetailResp{}, nil
 }

@@ -3,11 +3,10 @@ package logic
 import (
 	"context"
 	"errors"
-	"github.com/huangyisan/recipes-hub/ingredients/model"
+	__ "github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
+	"github.com/huangyisan/recipes-hub/app/ingredients/model"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/svc"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/pb"
-
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

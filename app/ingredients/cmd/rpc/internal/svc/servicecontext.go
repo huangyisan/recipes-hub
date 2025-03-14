@@ -2,8 +2,8 @@ package svc
 
 import (
 	"context"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/config"
-	"github.com/huangyisan/recipes-hub/ingredients/model"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/config"
+	"github.com/huangyisan/recipes-hub/app/ingredients/model"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"time"
 )

@@ -7,9 +7,9 @@ package server
 import (
 	"context"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/logic"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/internal/svc"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/pb"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/logic"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/svc"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
 )
 
 type IngredientServer struct {

@@ -3,9 +3,9 @@ package ingredient
 import (
 	"net/http"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/logic/ingredient"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/svc"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/types"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/logic/ingredient"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/svc"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 

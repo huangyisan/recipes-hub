@@ -7,7 +7,7 @@ package ingredient
 import (
 	"context"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/pb"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"

@@ -6,8 +6,8 @@ package handler
 import (
 	"net/http"
 
-	ingredient "github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/handler/ingredient"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/svc"
+	ingredient "github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/handler/ingredient"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )

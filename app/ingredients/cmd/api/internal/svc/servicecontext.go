@@ -1,8 +1,8 @@
 package svc
 
 import (
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/config"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/rpc/ingredient"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/config"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/ingredient"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 

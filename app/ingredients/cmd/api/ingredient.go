@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/config"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/handler"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/svc"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/config"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/handler"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

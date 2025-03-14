@@ -3,8 +3,8 @@ package ingredient
 import (
 	"context"
 
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/svc"
-	"github.com/huangyisan/recipes-hub/ingredients/cmd/api/internal/types"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/svc"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
