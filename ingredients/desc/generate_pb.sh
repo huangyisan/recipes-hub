@@ -1,0 +1,1 @@
+goctl rpc protoc ingredients.proto --go_out=../cmd/rpc/pb --go-grpc_out=../cmd/rpc/pb --zrpc_out=../cmd/rpc/

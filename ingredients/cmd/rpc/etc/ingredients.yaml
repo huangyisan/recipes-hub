@@ -1,0 +1,9 @@
+Name: ingredients.rpc
+ListenOn: 0.0.0.0:8080
+#Etcd:
+#  Hosts:
+#  - 127.0.0.1:2379
+#  Key: ingredients.rpc
+MysqlConf:
+  datasource: "root:huangyisan@tcp(127.0.0.1:3306)/recipeshub?charset=utf8mb4&parseTime=True&loc=Local"
+  timeout: 10
