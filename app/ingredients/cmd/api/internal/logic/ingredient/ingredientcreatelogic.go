@@ -6,6 +6,7 @@ import (
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/types"
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/ingredient"
 	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -32,7 +33,7 @@ func (l *IngredientCreateLogic) IngredientCreate(req *types.IngredientCreateReq)
 		Description:  req.Description,
 	})
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(err, "req: %+v", req)
 	}
 	resp = &types.IngredientCreateResp{}
 	_ = copier.Copy(resp, ingredientCreateResp)

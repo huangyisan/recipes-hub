@@ -26,3 +26,17 @@ func NewZError(code uint32, msg string) *ZError {
 		msg,
 	}
 }
+
+func NewZErrCode(code uint32) *ZError {
+	return &ZError{
+		code,
+		GetErrorMsg(code),
+	}
+}
+
+func NewZErrMsg(msg string) *ZError {
+	return &ZError{
+		ServerError,
+		msg,
+	}
+}

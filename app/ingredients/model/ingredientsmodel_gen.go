@@ -37,8 +37,10 @@ type (
 	}
 
 	Ingredients struct {
-		IngredientId   int64  `db:"ingredient_id"`   // 食材ID
-		IngredientName string `db:"ingredient_name"` // 食材名称
+		IngredientId           int64  `db:"ingredient_id"`            // 食材ID
+		IngredientName         string `db:"ingredient_name"`          // 食材名称
+		IngredientImageContent string `db:"ingredient_image_content"` // 食材图片地址
+		IngredientDescription  string `db:"ingredient_description"`   // 食材描述
 	}
 )
 
@@ -84,14 +86,14 @@ func (m *defaultIngredientsModel) FindOneByIngredientName(ctx context.Context, i
 }
 
 func (m *defaultIngredientsModel) Insert(ctx context.Context, data *Ingredients) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?)", m.table, ingredientsRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.IngredientName)
+	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, ingredientsRowsExpectAutoSet)
+	ret, err := m.conn.ExecCtx(ctx, query, data.IngredientName, data.IngredientImageContent, data.IngredientDescription)
 	return ret, err
 }
 
 func (m *defaultIngredientsModel) Update(ctx context.Context, newData *Ingredients) error {
 	query := fmt.Sprintf("update %s set %s where `ingredient_id` = ?", m.table, ingredientsRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.IngredientName, newData.IngredientId)
+	_, err := m.conn.ExecCtx(ctx, query, newData.IngredientName, newData.IngredientImageContent, newData.IngredientDescription, newData.IngredientId)
 	return err
 }
 

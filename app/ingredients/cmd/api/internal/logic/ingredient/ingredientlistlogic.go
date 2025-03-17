@@ -2,6 +2,7 @@ package ingredient
 
 import (
 	"context"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/ingredient"
 
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/svc"
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/types"
@@ -26,6 +27,6 @@ func NewIngredientListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *In
 
 func (l *IngredientListLogic) IngredientList(req *types.IngredientListReq) (resp *types.IngredientListResp, err error) {
 	// todo: add your logic here and delete this line
-
+	ingredientListReq, err := l.svcCtx.IngredientRpc.IngredientList(l.ctx, &ingredient.IngredientListReq{})
 	return
 }

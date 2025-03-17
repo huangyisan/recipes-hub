@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/huangyisan/recipes-hub/pkg/zerror"
 	"github.com/pkg/errors"
+	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"google.golang.org/grpc/status"
 	"net/http"
@@ -73,7 +74,7 @@ func Zresp(r *http.Request, w http.ResponseWriter, resp interface{}, err error) 
 			if gstatus != nil {
 				// 检查是否为自定义的错误类型
 				grpcCode := uint32(gstatus.Code())
-				if ok := zerror.IsZerrorCode(grpcCode); ok {
+				if ok := zerror.IsZerrCode(grpcCode); ok {
 					// 区分自定义错误跟系统底层、db等错误，底层、db错误不能返回给前端,一律返回"服务端异常"
 					// 所以只有当是自定义错误的时候,才需要重新赋值errMsg
 					errCode = grpcCode
@@ -81,8 +82,11 @@ func Zresp(r *http.Request, w http.ResponseWriter, resp interface{}, err error) 
 				}
 			}
 		}
+		// 记录日志
+		logx.WithContext(r.Context()).Errorf("【API-ERR】 : %+v ", err)
+		httpx.WriteJson(w, http.StatusOK, errorResp(errCode, errMsg))
 	}
-	httpx.WriteJson(w, http.StatusOK, errorResp(errCode, errMsg))
+
 }
 
 // 参数错误的应答

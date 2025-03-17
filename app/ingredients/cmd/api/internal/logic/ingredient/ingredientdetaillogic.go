@@ -2,6 +2,9 @@ package ingredient
 
 import (
 	"context"
+	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/ingredient"
+	"github.com/jinzhu/copier"
+	"github.com/pkg/errors"
 
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/svc"
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/api/internal/types"
@@ -24,8 +27,14 @@ func NewIngredientDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 	}
 }
 
-func (l *IngredientDetailLogic) IngredientDetail(req *types.IngredientDetailReq) (resp *types.IngredientDetailResq, err error) {
-	// todo: add your logic here and delete this line
-
+func (l *IngredientDetailLogic) IngredientDetail(req *types.IngredientDetailReq) (resp *types.IngredientDetailResp, err error) {
+	ingredientDetailResp, err := l.svcCtx.IngredientRpc.IngredientDetail(l.ctx, &ingredient.IngredientDetailReq{
+		Name: req.Name,
+	})
+	if err != nil {
+		return nil, errors.Wrapf(err, "req: %+v", req)
+	}
+	resp = &types.IngredientDetailResp{}
+	_ = copier.Copy(resp, ingredientDetailResp)
 	return
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/huangyisan/recipes-hub/pkg/interceptor/rpcserver"
 
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/config"
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/server"
@@ -33,6 +34,9 @@ func main() {
 		}
 	})
 	defer s.Stop()
+
+	// 自定义日志中间件, 当有请求进入到rpc服务时候，先进入拦截器然后就是执行handler方法.
+	s.AddUnaryInterceptors(rpcserver.LoggerInterceptor)
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

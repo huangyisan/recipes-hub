@@ -6,6 +6,7 @@ const (
 	ServerError uint32 = 500
 	DBError     uint32 = 510
 	ParamsError uint32 = 511
+	DBNoRecord  uint32 = 530
 )
 
 // error msg
@@ -17,6 +18,7 @@ func init() {
 	msg[ServerError] = "服务端异常"
 	msg[DBError] = "数据库异常"
 	msg[ParamsError] = "请求参数异常"
+	msg[DBNoRecord] = "数据库无对应条目"
 }
 
 func GetErrorMsg(errCode uint32) string {
@@ -26,8 +28,8 @@ func GetErrorMsg(errCode uint32) string {
 	return "其他错误"
 }
 
-func IsZerrorCode(errcode uint32) bool {
-	if _, ok := msg[errcode]; ok {
+func IsZerrCode(errCode uint32) bool {
+	if _, ok := msg[errCode]; ok {
 		return true
 	}
 	return false

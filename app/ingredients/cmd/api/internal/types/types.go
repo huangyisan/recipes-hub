@@ -4,10 +4,10 @@
 package types
 
 type Ingredient struct {
-	Id          int64  `json:"id"`
-	Name        string `json:"name"`
-	ImageUrl    string `json:"image_url"`
-	Description string `json:"description"`
+	Id           int64  `json:"id"`
+	Name         string `json:"name"`
+	ImageContent string `json:"image_content"`
+	Description  string `json:"description"`
 }
 
 type IngredientCreateReq struct {
@@ -23,7 +23,7 @@ type IngredientDetailReq struct {
 	Name string `json:"name"`
 }
 
-type IngredientDetailResq struct {
+type IngredientDetailResp struct {
 	Ingredient Ingredient `json:"ingredient"`
 }
 

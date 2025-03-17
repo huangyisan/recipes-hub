@@ -2,10 +2,10 @@ syntax = "v1"
 
 type (
 	Ingredient {
-		Id          int64  `json:"id"`
-		Name        string `json:"name"`
-		ImageUrl    string `json:"image_url"`
-		Description string `json:"description"`
+		Id           int64  `json:"id"`
+		Name         string `json:"name"`
+		imageContent string `json:"image_content"`
+		Description  string `json:"description"`
 	}
 )
 
@@ -32,7 +32,7 @@ type (
 	IngredientDetailReq {
 		Name string `json:"name"`
 	}
-	IngredientDetailResq {
+	IngredientDetailResp {
 		Ingredient Ingredient `json:"ingredient"`
 	}
 )
@@ -53,6 +53,6 @@ service ingredient {
 
 	@doc "ingredient detail"
 	@handler ingredientDetail
-	post /detail (IngredientDetailReq) returns (IngredientDetailResq)
+	post /detail (IngredientDetailReq) returns (IngredientDetailResp)
 }
 

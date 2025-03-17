@@ -32,8 +32,11 @@ CREATE INDEX idx_difficulty ON recipes(difficulty);  -- 为难度字段添加索
 CREATE INDEX idx_recipe_type ON recipes(recipe_type);  -- 为菜谱类型字段添加索引
 
 CREATE TABLE ingredients (
-                             ingredient_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '食材ID',
-                             ingredient_name VARCHAR(255) NOT NULL UNIQUE COMMENT '食材名称'
+    ingredient_id INT AUTO_INCREMENT PRIMARY KEY COMMENT '食材ID',
+    ingredient_name VARCHAR(255) NOT NULL UNIQUE COMMENT '食材名称',
+    ingredient_image_url VARCHAR(255) COMMENT '食材图片地址',
+    ingredient_description TEXT COMMENT '食材描述'
+    
 );
 
 CREATE TABLE recipe_ingredients (

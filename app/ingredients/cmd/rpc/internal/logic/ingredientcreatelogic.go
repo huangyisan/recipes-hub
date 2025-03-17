@@ -2,9 +2,10 @@ package logic
 
 import (
 	"context"
-	"errors"
 	__ "github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
 	"github.com/huangyisan/recipes-hub/app/ingredients/model"
+	"github.com/huangyisan/recipes-hub/pkg/zerror"
+	"github.com/pkg/errors"
 
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/svc"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -28,17 +29,20 @@ func NewIngredientCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 func (l *IngredientCreateLogic) IngredientCreate(in *__.IngredientCreateReq) (*__.IngredientCreateResp, error) {
 	// todo: add your logic here and delete this line
 	ingredientName, err := l.svcCtx.IngredientsModel.FindOneByIngredientName(l.ctx, in.Name)
+	logx.Infof(in.Name)
 	// 查询异常的情况
 	if err != nil && !errors.Is(err, model.ErrNotFound) {
-		return nil, err
+		return nil, errors.Wrapf(zerror.NewZErrCode(zerror.DBError), "Ingredient: %s, err: %v", in.Name, err)
 	}
 	// 条目已经存在
 	if ingredientName != nil {
-		return nil, errors.New("已经存在的食材")
+		return nil, errors.Wrapf(zerror.NewZErrMsg("Exist ingredient"), "Ingredient: %s exist in db", in.Name)
 	}
 	// 不存在条目,则新增
 	_, err = l.svcCtx.IngredientsModel.Insert(l.ctx, &model.Ingredients{
-		IngredientName: in.Name,
+		IngredientName:         in.Name,
+		IngredientImageContent: in.ImageContent,
+		IngredientDescription:  in.Description,
 	})
 	if err != nil {
 		return nil, err
