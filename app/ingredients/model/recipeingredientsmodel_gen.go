@@ -8,9 +8,9 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/Masterminds/squirrel"
 	"strings"
 
+	"github.com/Masterminds/squirrel"
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
@@ -31,6 +31,7 @@ type (
 		Update(ctx context.Context, data *RecipeIngredients) error
 		SelectBuilder() squirrel.SelectBuilder
 		FindAll(context.Context, squirrel.SelectBuilder, string) ([]*RecipeIngredients, error)
+		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*RecipeIngredients, error)
 
 		Delete(ctx context.Context, id int64) error
 	}
@@ -115,6 +116,32 @@ func (m *defaultRecipeIngredientsModel) FindAll(ctx context.Context, builder squ
 
 	// query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
 	query, values, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*RecipeIngredients
+
+	err = m.conn.QueryRowsCtx(ctx, &resp, query, values...)
+
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultRecipeIngredientsModel) FindPageListByIdASC(ctx context.Context, builder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*RecipeIngredients, error) {
+
+	builder = builder.Columns(recipeIngredientsRows)
+
+	if preMaxId > 0 {
+		builder = builder.Where(" id > ? ", preMaxId)
+	}
+
+	// query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).OrderBy("id ASC").Limit(uint64(pageSize)).ToSql()
+	query, values, err := builder.OrderBy("id ASC").Limit(uint64(pageSize)).ToSql()
 	if err != nil {
 		return nil, err
 	}
