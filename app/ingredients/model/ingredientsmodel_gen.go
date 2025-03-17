@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/Masterminds/squirrel"
 	"strings"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
@@ -18,17 +19,20 @@ import (
 var (
 	ingredientsFieldNames          = builder.RawFieldNames(&Ingredients{})
 	ingredientsRows                = strings.Join(ingredientsFieldNames, ",")
-	ingredientsRowsExpectAutoSet   = strings.Join(stringx.Remove(ingredientsFieldNames, "`ingredient_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	ingredientsRowsWithPlaceHolder = strings.Join(stringx.Remove(ingredientsFieldNames, "`ingredient_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	ingredientsRowsExpectAutoSet   = strings.Join(stringx.Remove(ingredientsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	ingredientsRowsWithPlaceHolder = strings.Join(stringx.Remove(ingredientsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 )
 
 type (
 	ingredientsModel interface {
 		Insert(ctx context.Context, data *Ingredients) (sql.Result, error)
-		FindOne(ctx context.Context, ingredientId int64) (*Ingredients, error)
+		FindOne(ctx context.Context, id int64) (*Ingredients, error)
 		FindOneByIngredientName(ctx context.Context, ingredientName string) (*Ingredients, error)
 		Update(ctx context.Context, data *Ingredients) error
-		Delete(ctx context.Context, ingredientId int64) error
+		SelectBuilder() squirrel.SelectBuilder
+		FindAll(context.Context, squirrel.SelectBuilder, string) ([]*Ingredients, error)
+
+		Delete(ctx context.Context, id int64) error
 	}
 
 	defaultIngredientsModel struct {
@@ -37,7 +41,7 @@ type (
 	}
 
 	Ingredients struct {
-		IngredientId           int64  `db:"ingredient_id"`            // 食材ID
+		Id                     int64  `db:"id"`                       // 食材ID
 		IngredientName         string `db:"ingredient_name"`          // 食材名称
 		IngredientImageContent string `db:"ingredient_image_content"` // 食材图片地址
 		IngredientDescription  string `db:"ingredient_description"`   // 食材描述
@@ -51,16 +55,16 @@ func newIngredientsModel(conn sqlx.SqlConn) *defaultIngredientsModel {
 	}
 }
 
-func (m *defaultIngredientsModel) Delete(ctx context.Context, ingredientId int64) error {
-	query := fmt.Sprintf("delete from %s where `ingredient_id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, ingredientId)
+func (m *defaultIngredientsModel) Delete(ctx context.Context, id int64) error {
+	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, id)
 	return err
 }
 
-func (m *defaultIngredientsModel) FindOne(ctx context.Context, ingredientId int64) (*Ingredients, error) {
-	query := fmt.Sprintf("select %s from %s where `ingredient_id` = ? limit 1", ingredientsRows, m.table)
+func (m *defaultIngredientsModel) FindOne(ctx context.Context, id int64) (*Ingredients, error) {
+	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", ingredientsRows, m.table)
 	var resp Ingredients
-	err := m.conn.QueryRowCtx(ctx, &resp, query, ingredientId)
+	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -92,9 +96,41 @@ func (m *defaultIngredientsModel) Insert(ctx context.Context, data *Ingredients)
 }
 
 func (m *defaultIngredientsModel) Update(ctx context.Context, newData *Ingredients) error {
-	query := fmt.Sprintf("update %s set %s where `ingredient_id` = ?", m.table, ingredientsRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.IngredientName, newData.IngredientImageContent, newData.IngredientDescription, newData.IngredientId)
+	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, ingredientsRowsWithPlaceHolder)
+	_, err := m.conn.ExecCtx(ctx, query, newData.IngredientName, newData.IngredientImageContent, newData.IngredientDescription, newData.Id)
 	return err
+}
+
+func (m *defaultIngredientsModel) SelectBuilder() squirrel.SelectBuilder {
+	return squirrel.Select().From(m.table)
+}
+
+func (m *defaultIngredientsModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*Ingredients, error) {
+
+	builder = builder.Columns(ingredientsRows)
+
+	if orderBy == "" {
+		builder = builder.OrderBy("id DESC")
+	} else {
+		builder = builder.OrderBy(orderBy)
+	}
+
+	// query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	query, values, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*Ingredients
+
+	err = m.conn.QueryRowsCtx(ctx, &resp, query, values...)
+
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultIngredientsModel) tableName() string {

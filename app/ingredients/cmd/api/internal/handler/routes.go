@@ -16,6 +16,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
+				// ingredient all list
+				Method:  http.MethodPost,
+				Path:    "/all",
+				Handler: ingredient.IngredientAllHandler(serverCtx),
+			},
+			{
 				// ingredent create
 				Method:  http.MethodPost,
 				Path:    "/create",

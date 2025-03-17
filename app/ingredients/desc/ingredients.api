@@ -29,6 +29,15 @@ type (
 )
 
 type (
+	IngredientAllReq {
+		orderBy string `json:order_by`
+	}
+	IngredientAllResp {
+		List []Ingredient `json:"list"`
+	}
+)
+
+type (
 	IngredientDetailReq {
 		Name string `json:"name"`
 	}
@@ -54,5 +63,9 @@ service ingredient {
 	@doc "ingredient detail"
 	@handler ingredientDetail
 	post /detail (IngredientDetailReq) returns (IngredientDetailResp)
+
+	@doc "ingredient all list"
+	@handler ingredientAll
+	post /all (IngredientAllReq) returns (IngredientAllResp)
 }
 

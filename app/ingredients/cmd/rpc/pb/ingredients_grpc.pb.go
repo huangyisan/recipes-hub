@@ -28,6 +28,8 @@ type IngredientClient interface {
 	IngredientList(ctx context.Context, in *IngredientListReq, opts ...grpc.CallOption) (*IngredientListResp, error)
 	// 添加食材
 	IngredientCreate(ctx context.Context, in *IngredientCreateReq, opts ...grpc.CallOption) (*IngredientCreateResp, error)
+	// 食材列表all
+	IngredientAll(ctx context.Context, in *IngredientAllReq, opts ...grpc.CallOption) (*IngredientAllResp, error)
 }
 
 type ingredientClient struct {
@@ -65,6 +67,15 @@ func (c *ingredientClient) IngredientCreate(ctx context.Context, in *IngredientC
 	return out, nil
 }
 
+func (c *ingredientClient) IngredientAll(ctx context.Context, in *IngredientAllReq, opts ...grpc.CallOption) (*IngredientAllResp, error) {
+	out := new(IngredientAllResp)
+	err := c.cc.Invoke(ctx, "/pb.ingredient/ingredientAll", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // IngredientServer is the server API for Ingredient service.
 // All implementations must embed UnimplementedIngredientServer
 // for forward compatibility
@@ -75,6 +86,8 @@ type IngredientServer interface {
 	IngredientList(context.Context, *IngredientListReq) (*IngredientListResp, error)
 	// 添加食材
 	IngredientCreate(context.Context, *IngredientCreateReq) (*IngredientCreateResp, error)
+	// 食材列表all
+	IngredientAll(context.Context, *IngredientAllReq) (*IngredientAllResp, error)
 	mustEmbedUnimplementedIngredientServer()
 }
 
@@ -90,6 +103,9 @@ func (UnimplementedIngredientServer) IngredientList(context.Context, *Ingredient
 }
 func (UnimplementedIngredientServer) IngredientCreate(context.Context, *IngredientCreateReq) (*IngredientCreateResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IngredientCreate not implemented")
+}
+func (UnimplementedIngredientServer) IngredientAll(context.Context, *IngredientAllReq) (*IngredientAllResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IngredientAll not implemented")
 }
 func (UnimplementedIngredientServer) mustEmbedUnimplementedIngredientServer() {}
 
@@ -158,6 +174,24 @@ func _Ingredient_IngredientCreate_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Ingredient_IngredientAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IngredientAllReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(IngredientServer).IngredientAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pb.ingredient/ingredientAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(IngredientServer).IngredientAll(ctx, req.(*IngredientAllReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Ingredient_ServiceDesc is the grpc.ServiceDesc for Ingredient service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +210,10 @@ var Ingredient_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ingredientCreate",
 			Handler:    _Ingredient_IngredientCreate_Handler,
+		},
+		{
+			MethodName: "ingredientAll",
+			Handler:    _Ingredient_IngredientAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

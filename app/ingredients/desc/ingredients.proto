@@ -37,6 +37,14 @@ message IngredientCreateReq {
 message IngredientCreateResp {
 }
 
+message IngredientAllReq {
+  string order_by = 1;
+}
+
+message IngredientAllResp {
+  repeated Ingredient list = 1;
+}
+
 service ingredient {
   // 食材详情
   rpc ingredientDetail(IngredientDetailReq) returns (IngredientDetailResp);
@@ -44,4 +52,6 @@ service ingredient {
   rpc ingredientList(IngredientListReq) returns (IngredientListResp);
   // 添加食材
   rpc ingredientCreate(IngredientCreateReq) returns (IngredientCreateResp);
+  // 食材列表all
+  rpc ingredientAll(IngredientAllReq) returns (IngredientAllResp);
 }

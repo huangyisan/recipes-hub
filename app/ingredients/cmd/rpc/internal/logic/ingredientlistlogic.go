@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/svc"
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/pb"
 

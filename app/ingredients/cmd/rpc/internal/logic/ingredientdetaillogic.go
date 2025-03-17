@@ -37,7 +37,7 @@ func (l *IngredientDetailLogic) IngredientDetail(in *__.IngredientDetailReq) (*_
 	}
 	return &__.IngredientDetailResp{
 		Ingredient: &__.Ingredient{
-			Id:           one.IngredientId,
+			Id:           one.Id,
 			Name:         one.IngredientName,
 			ImageContent: one.IngredientImageContent,
 			Description:  one.IngredientDescription,

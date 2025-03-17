@@ -15,6 +15,8 @@ import (
 
 type (
 	Ingredient           = __.Ingredient
+	IngredientAllReq     = __.IngredientAllReq
+	IngredientAllResp    = __.IngredientAllResp
 	IngredientCreateReq  = __.IngredientCreateReq
 	IngredientCreateResp = __.IngredientCreateResp
 	IngredientDetailReq  = __.IngredientDetailReq
@@ -29,6 +31,8 @@ type (
 		IngredientList(ctx context.Context, in *IngredientListReq, opts ...grpc.CallOption) (*IngredientListResp, error)
 		// 添加食材
 		IngredientCreate(ctx context.Context, in *IngredientCreateReq, opts ...grpc.CallOption) (*IngredientCreateResp, error)
+		// 食材列表all
+		IngredientAll(ctx context.Context, in *IngredientAllReq, opts ...grpc.CallOption) (*IngredientAllResp, error)
 	}
 
 	defaultIngredientZrpcClient struct {
@@ -58,4 +62,10 @@ func (m *defaultIngredientZrpcClient) IngredientList(ctx context.Context, in *In
 func (m *defaultIngredientZrpcClient) IngredientCreate(ctx context.Context, in *IngredientCreateReq, opts ...grpc.CallOption) (*IngredientCreateResp, error) {
 	client := __.NewIngredientClient(m.cli.Conn())
 	return client.IngredientCreate(ctx, in, opts...)
+}
+
+// 食材列表all
+func (m *defaultIngredientZrpcClient) IngredientAll(ctx context.Context, in *IngredientAllReq, opts ...grpc.CallOption) (*IngredientAllResp, error) {
+	client := __.NewIngredientClient(m.cli.Conn())
+	return client.IngredientAll(ctx, in, opts...)
 }

@@ -40,3 +40,9 @@ func (s *IngredientServer) IngredientCreate(ctx context.Context, in *__.Ingredie
 	l := logic.NewIngredientCreateLogic(ctx, s.svcCtx)
 	return l.IngredientCreate(in)
 }
+
+// 食材列表all
+func (s *IngredientServer) IngredientAll(ctx context.Context, in *__.IngredientAllReq) (*__.IngredientAllResp, error) {
+	l := logic.NewIngredientAllLogic(ctx, s.svcCtx)
+	return l.IngredientAll(in)
+}

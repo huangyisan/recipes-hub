@@ -10,6 +10,14 @@ type Ingredient struct {
 	Description  string `json:"description"`
 }
 
+type IngredientAllReq struct {
+	OrderBy string `json:order_by`
+}
+
+type IngredientAllResp struct {
+	List []Ingredient `json:"list"`
+}
+
 type IngredientCreateReq struct {
 	Name         string `json:"name"`
 	ImageContent string `json:"image_content,optional"`

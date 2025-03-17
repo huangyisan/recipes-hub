@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/Masterminds/squirrel"
 	"strings"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
@@ -18,17 +19,20 @@ import (
 var (
 	recipeIngredientsFieldNames          = builder.RawFieldNames(&RecipeIngredients{})
 	recipeIngredientsRows                = strings.Join(recipeIngredientsFieldNames, ",")
-	recipeIngredientsRowsExpectAutoSet   = strings.Join(stringx.Remove(recipeIngredientsFieldNames, "`recipe_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
-	recipeIngredientsRowsWithPlaceHolder = strings.Join(stringx.Remove(recipeIngredientsFieldNames, "`recipe_id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+	recipeIngredientsRowsExpectAutoSet   = strings.Join(stringx.Remove(recipeIngredientsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	recipeIngredientsRowsWithPlaceHolder = strings.Join(stringx.Remove(recipeIngredientsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 )
 
 type (
 	recipeIngredientsModel interface {
 		Insert(ctx context.Context, data *RecipeIngredients) (sql.Result, error)
-		FindOne(ctx context.Context, recipeId int64) (*RecipeIngredients, error)
-		FindOneByRecipeIdIngredientId(ctx context.Context, recipeId int64, ingredientId sql.NullInt64) (*RecipeIngredients, error)
+		FindOne(ctx context.Context, id int64) (*RecipeIngredients, error)
+		FindOneByIdIngredientId(ctx context.Context, id int64, ingredientId sql.NullInt64) (*RecipeIngredients, error)
 		Update(ctx context.Context, data *RecipeIngredients) error
-		Delete(ctx context.Context, recipeId int64) error
+		SelectBuilder() squirrel.SelectBuilder
+		FindAll(context.Context, squirrel.SelectBuilder, string) ([]*RecipeIngredients, error)
+
+		Delete(ctx context.Context, id int64) error
 	}
 
 	defaultRecipeIngredientsModel struct {
@@ -37,7 +41,7 @@ type (
 	}
 
 	RecipeIngredients struct {
-		RecipeId     int64         `db:"recipe_id"`     // 菜谱ID
+		Id           int64         `db:"id"`            // 菜谱ID
 		IngredientId sql.NullInt64 `db:"ingredient_id"` // 食材ID
 	}
 )
@@ -49,16 +53,16 @@ func newRecipeIngredientsModel(conn sqlx.SqlConn) *defaultRecipeIngredientsModel
 	}
 }
 
-func (m *defaultRecipeIngredientsModel) Delete(ctx context.Context, recipeId int64) error {
-	query := fmt.Sprintf("delete from %s where `recipe_id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, recipeId)
+func (m *defaultRecipeIngredientsModel) Delete(ctx context.Context, id int64) error {
+	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+	_, err := m.conn.ExecCtx(ctx, query, id)
 	return err
 }
 
-func (m *defaultRecipeIngredientsModel) FindOne(ctx context.Context, recipeId int64) (*RecipeIngredients, error) {
-	query := fmt.Sprintf("select %s from %s where `recipe_id` = ? limit 1", recipeIngredientsRows, m.table)
+func (m *defaultRecipeIngredientsModel) FindOne(ctx context.Context, id int64) (*RecipeIngredients, error) {
+	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", recipeIngredientsRows, m.table)
 	var resp RecipeIngredients
-	err := m.conn.QueryRowCtx(ctx, &resp, query, recipeId)
+	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -69,10 +73,10 @@ func (m *defaultRecipeIngredientsModel) FindOne(ctx context.Context, recipeId in
 	}
 }
 
-func (m *defaultRecipeIngredientsModel) FindOneByRecipeIdIngredientId(ctx context.Context, recipeId int64, ingredientId sql.NullInt64) (*RecipeIngredients, error) {
+func (m *defaultRecipeIngredientsModel) FindOneByIdIngredientId(ctx context.Context, id int64, ingredientId sql.NullInt64) (*RecipeIngredients, error) {
 	var resp RecipeIngredients
-	query := fmt.Sprintf("select %s from %s where `recipe_id` = ? and `ingredient_id` = ? limit 1", recipeIngredientsRows, m.table)
-	err := m.conn.QueryRowCtx(ctx, &resp, query, recipeId, ingredientId)
+	query := fmt.Sprintf("select %s from %s where `id` = ? and `ingredient_id` = ? limit 1", recipeIngredientsRows, m.table)
+	err := m.conn.QueryRowCtx(ctx, &resp, query, id, ingredientId)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -90,9 +94,41 @@ func (m *defaultRecipeIngredientsModel) Insert(ctx context.Context, data *Recipe
 }
 
 func (m *defaultRecipeIngredientsModel) Update(ctx context.Context, newData *RecipeIngredients) error {
-	query := fmt.Sprintf("update %s set %s where `recipe_id` = ?", m.table, recipeIngredientsRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, newData.IngredientId, newData.RecipeId)
+	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, recipeIngredientsRowsWithPlaceHolder)
+	_, err := m.conn.ExecCtx(ctx, query, newData.IngredientId, newData.Id)
 	return err
+}
+
+func (m *defaultRecipeIngredientsModel) SelectBuilder() squirrel.SelectBuilder {
+	return squirrel.Select().From(m.table)
+}
+
+func (m *defaultRecipeIngredientsModel) FindAll(ctx context.Context, builder squirrel.SelectBuilder, orderBy string) ([]*RecipeIngredients, error) {
+
+	builder = builder.Columns(recipeIngredientsRows)
+
+	if orderBy == "" {
+		builder = builder.OrderBy("id DESC")
+	} else {
+		builder = builder.OrderBy(orderBy)
+	}
+
+	// query, values, err := builder.Where("del_state = ?", globalkey.DelStateNo).ToSql()
+	query, values, err := builder.ToSql()
+	if err != nil {
+		return nil, err
+	}
+
+	var resp []*RecipeIngredients
+
+	err = m.conn.QueryRowsCtx(ctx, &resp, query, values...)
+
+	switch err {
+	case nil:
+		return resp, nil
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultRecipeIngredientsModel) tableName() string {

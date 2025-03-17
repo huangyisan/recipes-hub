@@ -11,7 +11,6 @@ import (
 )
 
 func LoggerInterceptor(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
-	logx.WithContext(ctx).Infof("through LoggerInterceptor")
 	resp, err = handler(ctx, req)
 	if err != nil {
 		causeErr := errors.Cause(err)
