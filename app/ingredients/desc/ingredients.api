@@ -11,11 +11,13 @@ type (
 
 type (
 	IngredientCreateReq {
-		Name         string `json:"name"`
-		imageContent string `json:"image_content,optional"`
-		Description  string `json:"description,optional"`
+		Name         string `form:"name"`
+		imageContent string `form:"image_content,optional"`
+		Description  string `form:"description,optional"`
 	}
-	IngredientCreateResp  {}
+	IngredientCreateResp {
+		Ingredient Ingredient `json:"data"`
+	}
 )
 
 type (
@@ -66,6 +68,6 @@ service ingredient {
 
 	@doc "ingredient all list"
 	@handler ingredientAll
-	post /all (IngredientAllReq) returns (IngredientAllResp)
+	get /all (IngredientAllReq) returns (IngredientAllResp)
 }
 

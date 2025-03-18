@@ -30,11 +30,14 @@ message IngredientListResp {
 
 message IngredientCreateReq {
   string name = 1;
-  string image_content = 2;
-  string description = 3;
+  bytes image_content = 2;
+  string image_name = 3;
+  string image_content_type = 4;
+  string description = 5;
 }
 
 message IngredientCreateResp {
+  Ingredient ingredient = 1;
 }
 
 message IngredientAllReq {

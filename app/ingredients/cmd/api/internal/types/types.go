@@ -19,12 +19,13 @@ type IngredientAllResp struct {
 }
 
 type IngredientCreateReq struct {
-	Name         string `json:"name"`
-	ImageContent string `json:"image_content,optional"`
-	Description  string `json:"description,optional"`
+	Name         string `form:"name"`
+	ImageContent string `form:"image_content,optional"`
+	Description  string `form:"description,optional"`
 }
 
 type IngredientCreateResp struct {
+	Ingredient Ingredient `json:"data"`
 }
 
 type IngredientDetailReq struct {

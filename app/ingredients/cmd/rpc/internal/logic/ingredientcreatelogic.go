@@ -28,8 +28,9 @@ func NewIngredientCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 // 添加食材
 func (l *IngredientCreateLogic) IngredientCreate(in *__.IngredientCreateReq) (*__.IngredientCreateResp, error) {
 	// todo: add your logic here and delete this line
+
 	ingredientName, err := l.svcCtx.IngredientsModel.FindOneByIngredientName(l.ctx, in.Name)
-	logx.Infof(in.Name)
+
 	// 查询异常的情况
 	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.Wrapf(zerror.NewZErrCode(zerror.DBError), "Ingredient: %s, err: %v", in.Name, err)
@@ -38,15 +39,33 @@ func (l *IngredientCreateLogic) IngredientCreate(in *__.IngredientCreateReq) (*_
 	if ingredientName != nil {
 		return nil, errors.Wrapf(zerror.NewZErrMsg("Exist ingredient"), "Ingredient: %s exist in db", in.Name)
 	}
+
+	//上传r2
+	filePath, err := l.svcCtx.S3Handler.UploadFile(l.ctx, in.ImageName, in.ImageContent, in.ImageContentType)
+	if err != nil {
+		return nil, err
+	}
+
+	// 列出r2
+	//err = l.svcCtx.S3Handler.ListObjectsOutput(l.ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
 	// 不存在条目,则新增
 	_, err = l.svcCtx.IngredientsModel.Insert(l.ctx, &model.Ingredients{
 		IngredientName:         in.Name,
-		IngredientImageContent: in.ImageContent,
+		IngredientImageContent: filePath,
 		IngredientDescription:  in.Description,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return &__.IngredientCreateResp{}, nil
+	return &__.IngredientCreateResp{
+		Ingredient: &__.Ingredient{
+			Name:         in.Name,
+			ImageContent: filePath,
+			Description:  in.Description,
+		},
+	}, nil
 }

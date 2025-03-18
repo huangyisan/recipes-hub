@@ -4,7 +4,9 @@ import (
 	"context"
 	"github.com/huangyisan/recipes-hub/app/ingredients/cmd/rpc/internal/config"
 	"github.com/huangyisan/recipes-hub/app/ingredients/model"
+	"github.com/huangyisan/recipes-hub/pkg/cloudflare/r2"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
+	"github.com/zeromicro/go-zero/zrpc"
 	"time"
 )
 
@@ -12,14 +14,18 @@ type ServiceContext struct {
 	Config                 config.Config
 	IngredientsModel       model.IngredientsModel
 	RecipeIngredientsModel model.RecipeIngredientsModel
+	S3Handler              r2.S3Handler
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	mysql := NewMysql(c)
+	// rpc超时1分钟
+	zrpc.SetClientSlowThreshold(time.Second * 60 * 1)
 	return &ServiceContext{
 		Config:                 c,
 		IngredientsModel:       model.NewIngredientsModel(mysql),
 		RecipeIngredientsModel: model.NewRecipeIngredientsModel(mysql),
+		S3Handler:              NewS3(),
 	}
 }
 
@@ -38,4 +44,8 @@ func NewMysql(c config.Config) sqlx.SqlConn {
 	db.SetMaxOpenConns(100)
 	db.SetMaxIdleConns(10)
 	return sqlConn
+}
+
+func NewS3() r2.S3Handler {
+	return r2.NewR2Server()
 }

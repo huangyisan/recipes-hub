@@ -17,7 +17,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				// ingredient all list
-				Method:  http.MethodPost,
+				Method:  http.MethodGet,
 				Path:    "/all",
 				Handler: ingredient.IngredientAllHandler(serverCtx),
 			},

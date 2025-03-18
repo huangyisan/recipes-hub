@@ -8,32 +8,49 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/pkg/errors"
 	"github.com/zeromicro/go-zero/core/logx"
+	"io"
+	"net/http"
 )
 
 type IngredientCreateLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
+	r      *http.Request
 }
 
 // ingredent create
-func NewIngredientCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *IngredientCreateLogic {
+func NewIngredientCreateLogic(r *http.Request, ctx context.Context, svcCtx *svc.ServiceContext) *IngredientCreateLogic {
 	return &IngredientCreateLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
+		r:      r,
 	}
 }
 
 func (l *IngredientCreateLogic) IngredientCreate(req *types.IngredientCreateReq) (resp *types.IngredientCreateResp, err error) {
 	// todo: add your logic here and delete this line
+	file, header, err := l.r.FormFile("image_content")
+	if err != nil {
+		return nil, errors.Wrapf(err, "uploadFile error")
+	}
+	defer file.Close()
+	// 读取文件内容
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		return nil, errors.Wrapf(err, "readFile error")
+	}
+	logx.Infof("file size: %d", header.Size)
 	ingredientCreateResp, err := l.svcCtx.IngredientRpc.IngredientCreate(l.ctx, &ingredient.IngredientCreateReq{
-		Name:         req.Name,
-		ImageContent: req.ImageContent,
-		Description:  req.Description,
+		Name:             req.Name,
+		ImageContent:     fileBytes,
+		ImageName:        header.Filename,
+		ImageContentType: header.Header.Get("Content-Type"),
+		Description:      req.Description,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(err, "req: %+v", req)
+		return nil, errors.Wrapf(err, "req: %+v", req.Name)
 	}
 	resp = &types.IngredientCreateResp{}
 	_ = copier.Copy(resp, ingredientCreateResp)
