@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = ".";
+
+package pb;
+
+message Recipe {
+  int64 id = 1;
+  string name = 2;
+  string imageContent = 3;
+  string instructions = 4;
+  int64 cookingTime = 5;
+  string difficulty = 6;
+  string recipeType = 7;
+   string creationDate = 8;
+   string lastUpdated = 9;
+   string lastCookedDate = 10;
+
+}
+
+message RecipeCreateReq {
+  string name = 1;
+  bytes image_content = 2;
+  string instructions = 3;
+  int64 cookingTime = 4;
+  string difficulty = 5;
+  string recipeType = 6;
+  string creationDate = 7;
+  string image_name = 8;
+  string image_content_type = 9;
+}
+
+message RecipeCreateResp {
+  Recipe recipe = 1;
+}
+
+service recipe {
+  // 菜单详情
+//  rpc ingredientDetail(IngredientDetailReq) returns (IngredientDetailResp);
+  // 食材列表
+//  rpc ingredientList(IngredientListReq) returns (IngredientListResp);
+  // 添加菜单
+  rpc recipeCreate(RecipeCreateReq) returns (RecipeCreateResp);
+  // 食材列表all
+//  rpc ingredientAll(IngredientAllReq) returns (IngredientAllResp);
+}

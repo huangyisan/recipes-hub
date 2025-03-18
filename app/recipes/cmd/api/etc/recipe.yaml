@@ -1,0 +1,9 @@
+Name: recipe
+Host: 0.0.0.0
+Port: 8888
+
+RecipeRpcConf:
+  Endpoints:
+    - 127.0.0.1:8081
+  NonBlock: true
+  Timeout: 100000

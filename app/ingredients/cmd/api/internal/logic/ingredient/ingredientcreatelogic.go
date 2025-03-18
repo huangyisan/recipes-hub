@@ -30,7 +30,6 @@ func NewIngredientCreateLogic(r *http.Request, ctx context.Context, svcCtx *svc.
 }
 
 func (l *IngredientCreateLogic) IngredientCreate(req *types.IngredientCreateReq) (resp *types.IngredientCreateResp, err error) {
-	// todo: add your logic here and delete this line
 	file, header, err := l.r.FormFile("image_content")
 	if err != nil {
 		return nil, errors.Wrapf(err, "uploadFile error")
@@ -41,7 +40,7 @@ func (l *IngredientCreateLogic) IngredientCreate(req *types.IngredientCreateReq)
 	if err != nil {
 		return nil, errors.Wrapf(err, "readFile error")
 	}
-	logx.Infof("file size: %d", header.Size)
+
 	ingredientCreateResp, err := l.svcCtx.IngredientRpc.IngredientCreate(l.ctx, &ingredient.IngredientCreateReq{
 		Name:             req.Name,
 		ImageContent:     fileBytes,

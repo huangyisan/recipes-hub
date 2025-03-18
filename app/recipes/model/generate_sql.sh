@@ -1,0 +1,1 @@
+goctl model mysql ddl -src recipes.sql --dir .

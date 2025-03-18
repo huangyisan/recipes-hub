@@ -1,0 +1,7 @@
+Name: recipes.rpc
+ListenOn: 0.0.0.0:8081
+Timeout: 100000
+
+MysqlConf:
+  datasource: "root:huangyisan@tcp(127.0.0.1:3306)/recipeshub?charset=utf8mb4&parseTime=True&loc=Local"
+  timeout: 10

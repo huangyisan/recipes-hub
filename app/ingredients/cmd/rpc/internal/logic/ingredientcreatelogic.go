@@ -27,7 +27,6 @@ func NewIngredientCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 // 添加食材
 func (l *IngredientCreateLogic) IngredientCreate(in *__.IngredientCreateReq) (*__.IngredientCreateResp, error) {
-	// todo: add your logic here and delete this line
 
 	ingredientName, err := l.svcCtx.IngredientsModel.FindOneByIngredientName(l.ctx, in.Name)
 
@@ -46,12 +45,6 @@ func (l *IngredientCreateLogic) IngredientCreate(in *__.IngredientCreateReq) (*_
 		return nil, errors.Wrapf(zerror.NewZErrMsg("Upload File error"), "Upload File error: %s", in.Name)
 	}
 
-	// 列出r2
-	//err = l.svcCtx.S3Handler.ListObjectsOutput(l.ctx)
-	//if err != nil {
-	//	return nil, err
-	//}
-	// 不存在条目,则新增
 	_, err = l.svcCtx.IngredientsModel.Insert(l.ctx, &model.Ingredients{
 		IngredientName:         in.Name,
 		IngredientImageContent: filePath,

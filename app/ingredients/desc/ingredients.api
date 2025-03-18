@@ -54,9 +54,9 @@ type (
 	group:  ingredient
 )
 service ingredient {
-	@doc "ingredent create"
+	@doc "ingredent recipeCreateResp"
 	@handler ingredientCreate
-	post /create (IngredientCreateReq) returns (IngredientCreateResp)
+	post /recipeCreateResp (IngredientCreateReq) returns (IngredientCreateResp)
 
 	@doc "ingredient list"
 	@handler ingredientList

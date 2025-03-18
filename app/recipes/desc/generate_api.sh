@@ -1,0 +1,1 @@
+goctl api go --api recipes.api --dir ../cmd/api
