@@ -43,7 +43,7 @@ func (l *IngredientCreateLogic) IngredientCreate(in *__.IngredientCreateReq) (*_
 	//上传r2
 	filePath, err := l.svcCtx.S3Handler.UploadFile(l.ctx, in.ImageName, in.ImageContent, in.ImageContentType)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrapf(zerror.NewZErrMsg("Upload File error"), "Upload File error: %s", in.Name)
 	}
 
 	// 列出r2

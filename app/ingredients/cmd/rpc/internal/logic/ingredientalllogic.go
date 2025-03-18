@@ -33,7 +33,6 @@ func (l *IngredientAllLogic) IngredientAll(in *__.IngredientAllReq) (*__.Ingredi
 	if err != nil {
 		return nil, errors.Wrapf(zerror.NewZErrCode(zerror.DBError), "FindAll error: %v", err)
 	}
-	logx.Infof("%v+\n", all)
 	var ingredientList []*__.Ingredient
 	if len(all) > 0 {
 		for _, v := range all {
