@@ -33,6 +33,7 @@ type (
 		SelectBuilder() squirrel.SelectBuilder
 		FindAll(context.Context, squirrel.SelectBuilder, string) ([]*Recipes, error)
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*Recipes, error)
+		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
 
 		Delete(ctx context.Context, id int64) error
 	}
@@ -45,7 +46,7 @@ type (
 	Recipes struct {
 		Id             int64          `db:"id"`               // 菜谱ID
 		RecipeName     string         `db:"recipe_name"`      // 菜名，唯一约束
-		Instructions   string         `db:"instructions"`     // 烹饪步骤
+		Instructions   sql.NullString `db:"instructions"`     // 烹饪步骤
 		CookingTime    int64          `db:"cooking_time"`     // 烹饪时间（以分钟为单位）
 		Difficulty     string         `db:"difficulty"`       // 难度等级
 		RecipeType     int64          `db:"recipe_type"`      // 菜谱类型
@@ -165,6 +166,15 @@ func (m *defaultRecipesModel) FindPageListByIdASC(ctx context.Context, builder s
 	default:
 		return nil, err
 	}
+}
+
+func (m *defaultRecipesModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
+
+	return m.conn.TransactCtx(ctx, fn)
+	//return m.conn.TransactCtx(ctx,func(ctx context.Context,session sqlx.Session) error {
+	//        return  fn(ctx,session)
+	//})
+
 }
 
 func (m *defaultRecipesModel) tableName() string {

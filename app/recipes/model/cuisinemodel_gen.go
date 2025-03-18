@@ -32,6 +32,7 @@ type (
 		SelectBuilder() squirrel.SelectBuilder
 		FindAll(context.Context, squirrel.SelectBuilder, string) ([]*Cuisine, error)
 		FindPageListByIdASC(ctx context.Context, rowBuilder squirrel.SelectBuilder, preMaxId, pageSize int64) ([]*Cuisine, error)
+		Trans(ctx context.Context, fn func(context context.Context, session sqlx.Session) error) error
 
 		Delete(ctx context.Context, id int64) error
 	}
@@ -157,6 +158,15 @@ func (m *defaultCuisineModel) FindPageListByIdASC(ctx context.Context, builder s
 	default:
 		return nil, err
 	}
+}
+
+func (m *defaultCuisineModel) Trans(ctx context.Context, fn func(ctx context.Context, session sqlx.Session) error) error {
+
+	return m.conn.TransactCtx(ctx, fn)
+	//return m.conn.TransactCtx(ctx,func(ctx context.Context,session sqlx.Session) error {
+	//        return  fn(ctx,session)
+	//})
+
 }
 
 func (m *defaultCuisineModel) tableName() string {

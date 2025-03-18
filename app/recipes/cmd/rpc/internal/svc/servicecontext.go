@@ -13,6 +13,7 @@ import (
 type ServiceContext struct {
 	Config       config.Config
 	RecipesModel model.RecipesModel
+	CuisineModel model.CuisineModel
 	S3Handler    r2.S3Handler
 }
 
@@ -23,6 +24,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config:       c,
 		RecipesModel: model.NewRecipesModel(mysql),
+		CuisineModel: model.NewCuisineModel(mysql),
 		S3Handler:    NewS3(),
 	}
 }

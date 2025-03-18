@@ -43,7 +43,7 @@ func (l *RecipeCreateLogic) RecipeCreate(req *types.RecipeCreateReq) (resp *type
 	}
 
 	recipeCreateResp, err := l.svcCtx.RecipeRpc.RecipeCreate(l.ctx, &recipe.RecipeCreateReq{
-		Name:             req.RecipeName,
+		Name:             req.Name,
 		ImageContent:     fileBytes,
 		ImageName:        header.Filename,
 		ImageContentType: header.Header.Get("Content-Type"),
@@ -51,15 +51,15 @@ func (l *RecipeCreateLogic) RecipeCreate(req *types.RecipeCreateReq) (resp *type
 		CookingTime:      req.CookingTime,
 		Difficulty:       req.Difficulty,
 		RecipeType:       req.RecipeType,
-		CreationDate:     req.CreationDate,
+		//CreationDate:     req.CreationDate,
 	})
 	if err != nil {
-		return nil, errors.Wrapf(err, "RecipeCreate err: %v", req.RecipeName)
+		return nil, errors.Wrapf(err, "Insert err: %v", req.Name)
 	}
 	resp = &types.RecipeCreateResp{}
-	err = copier.Copy(resp, recipeCreateResp.GetRecipe())
+	err = copier.Copy(resp, recipeCreateResp)
 	if err != nil {
-		return nil, errors.Wrapf(err, "RecipeCreate err: %v", req.RecipeName)
+		return nil, errors.Wrapf(err, "RecipeCreate err: %v", req.Name)
 	}
 	return
 }

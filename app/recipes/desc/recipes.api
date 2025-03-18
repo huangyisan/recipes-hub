@@ -3,7 +3,7 @@ syntax = "v1"
 type (
 	Recipe {
 		Id             int64  `json:"id"`
-		RecipeName     string `json:"name"`
+		Name           string `json:"name"`
 		Instructions   string `json:"instructions"`
 		CookingTime    int64  `json:"cooking_time"`
 		Difficulty     string `json:"difficulty"`
@@ -17,7 +17,7 @@ type (
 
 type (
 	RecipeCreateReq {
-		RecipeName   string `form:"name"`
+		Name         string `form:"name"`
 		Instructions string `form:"instructions,optional"`
 		CookingTime  int64  `form:"cooking_time,optional"`
 		Difficulty   string `form:"difficulty,optional"`
@@ -38,6 +38,6 @@ type (
 service recipe {
 	@doc "recipe recipeCreateResp"
 	@handler recipeCreate
-	post /recipeCreateResp (RecipeCreateReq) returns (RecipeCreateResp)
+	post /create (RecipeCreateReq) returns (RecipeCreateResp)
 }
 

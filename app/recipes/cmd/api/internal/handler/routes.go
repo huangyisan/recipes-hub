@@ -16,7 +16,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	server.AddRoutes(
 		[]rest.Route{
 			{
-				// recipe create
+				// recipe recipeCreateResp
 				Method:  http.MethodPost,
 				Path:    "/create",
 				Handler: recipe.RecipeCreateHandler(serverCtx),

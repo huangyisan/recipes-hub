@@ -1,7 +1,7 @@
 CREATE TABLE recipes (
                          id INT AUTO_INCREMENT COMMENT '菜谱ID',
                          recipe_name VARCHAR(255) NOT NULL DEFAULT '番茄炒蛋' COMMENT '菜名，唯一约束',
-                         instructions TEXT NOT NULL DEFAULT '' COMMENT '烹饪步骤',
+                         instructions TEXT COMMENT '烹饪步骤',
                          cooking_time INT NOT NULL DEFAULT 5 COMMENT '烹饪时间（以分钟为单位）',
                          difficulty VARCHAR(50) NOT NULL DEFAULT '简单' COMMENT '难度等级',
                          recipe_type TINYINT NOT NULL DEFAULT 1 COMMENT '菜谱类型',

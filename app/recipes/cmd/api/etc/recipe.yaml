@@ -4,6 +4,6 @@ Port: 8888
 
 RecipeRpcConf:
   Endpoints:
-    - 127.0.0.1:8081
+    - 127.0.0.1:8080
   NonBlock: true
   Timeout: 100000

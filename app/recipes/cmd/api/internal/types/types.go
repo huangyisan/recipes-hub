@@ -5,7 +5,7 @@ package types
 
 type Recipe struct {
 	Id             int64  `json:"id"`
-	RecipeName     string `json:"name"`
+	Name           string `json:"name"`
 	Instructions   string `json:"instructions"`
 	CookingTime    int64  `json:"cooking_time"`
 	Difficulty     string `json:"difficulty"`
@@ -17,7 +17,7 @@ type Recipe struct {
 }
 
 type RecipeCreateReq struct {
-	RecipeName   string `form:"name"`
+	Name         string `form:"name"`
 	Instructions string `form:"instructions,optional"`
 	CookingTime  int64  `form:"cooking_time,optional"`
 	Difficulty   string `form:"difficulty,optional"`
