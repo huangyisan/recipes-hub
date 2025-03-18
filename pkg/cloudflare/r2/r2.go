@@ -23,7 +23,7 @@ var (
 	accountId       = "<accountid>"
 	accessKeyId     = "<access_key_id>"
 	accessKeySecret = "<access_key_secret>"
-	baseDir         = "/assets/"
+	baseDir         = "assets/"
 	r2Domain        = "abc.com"
 )
 
@@ -106,5 +106,5 @@ func (r *R2Server) UploadFile(ctx context.Context, fileName string, fileContent 
 			outKey = *output.Key
 		}
 	}
-	return fmt.Sprintf("https://%s%s", r2Domain, outKey), err
+	return fmt.Sprintf("https://%s/%s", r2Domain, outKey), err
 }
